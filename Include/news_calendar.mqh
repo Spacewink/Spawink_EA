@@ -103,3 +103,21 @@ void NewsCalendar::update()
         event.time = StrToTime(StringSubstr(eventHtml, StringFind(eventHtml, "<td class=\"calendar__date\"") + StringLen("<td class=\"calendar__date\""), StringFind(eventHtml, "</td>", StringFind(eventHtml, "<td class=\"calendar__date\""))));
         event.currency = StringSubstr(eventHtml, StringFind(eventHtml, "<td class=\"calendar__currency\"") + StringLen("<td class=\"calendar__currency\""), StringFind(eventHtml, "</td>", StringFind(eventHtml, "<td class=\"calendar__currency\"")) - StringFind(eventHtml, "<td class=\"calendar__currency\"") - StringLen("<td class=\"calendar__currency\""));
         event.event = StringSubstr(eventHtml, StringFind(eventHtml, "<td class=\"calendar__event\"") + StringLen("<td class=\"calendar__event
+bool filterNews(const datetime& startTime, const datetime& endTime, const int impact)
+{
+    int newsCount = NewsCalTotal();
+
+    for (int i = 0; i < newsCount; i++)
+    {
+        NewsEvent event;
+        if (NewsCalGetEvent(i, event))
+        {
+            if (event.DateTime() >= startTime && event.DateTime() <= endTime && event.Impact() >= impact)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
